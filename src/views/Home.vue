@@ -20,13 +20,8 @@
         >
           <!-- 除了自带的菜单项，还可以自定义，甚至可以完全自定义自带菜单 jnr-disabled表示禁止点击，无效果 -->
           <slot name="item"><div class="jnr-disabled item">禁止</div> </slot>
-          <!-- 内容区域 -->
-          <!-- <div slot="content" class="jnr-container-main-item">
-            <echarts></echarts>
-          </div> -->
-                                   </router-view>
+        </router-view>
       </div>
-      <!-- <template slot="footer"> </template> -->
     </div>
   </jnr-container>  
 </template>
