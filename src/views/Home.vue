@@ -1,17 +1,18 @@
 
 <template>
- <jnr-container>
+  <jnr-container>
+    <router-view ></router-view>
     <div class="jnr-container-aside" slot="aside">
-     <router-view name="aside" :menu="menu" @jnr-click="addTab"/>
+      <jnr-aside-nav :menu="menu" @jnr-click="addTab"></jnr-aside-nav>
     </div>
     <div class="jnr-container-body" slot="body">
       <div class="jnr-container-header" slot="header">
         <div class="jnr-container-header-item" slot="header-item-first">
-    <router-view name="header"/>
+          <jnr-header-nav></jnr-header-nav>
         </div>
       </div>
       <div class="jnr-container-main" slot="main">
-         <router-view name="tabs"
+        <jnr-tabs
           :height="tabHeight"
           ref="tabs"
           @tab-click="tabClick"
@@ -20,21 +21,44 @@
         >
           <!-- 除了自带的菜单项，还可以自定义，甚至可以完全自定义自带菜单 jnr-disabled表示禁止点击，无效果 -->
           <slot name="item"><div class="jnr-disabled item">禁止</div> </slot>
-        </router-view>
+          <!-- 内容区域 -->
+          <!-- <div slot="content" class="jnr-container-main-item">
+            <echarts></echarts>
+          </div> -->
+        </jnr-tabs>
       </div>
+      <!-- <template slot="footer"> </template> -->
     </div>
-  </jnr-container>  
+  </jnr-container>
 </template>
+
+<style lang="less">
+.el-header {
+  background-color: #b3c0d1;
+  color: #333;
+  line-height: 60px;
+}
+
+.el-aside {
+  color: #333;
+}
+</style>
+
+
 <script>
-import jnrContainer from '@/components/jnr/jnrContainer'
+// import $ from "jquery";
+import jnrTabs from "@/views/jnr/jnrTabs.vue";
+import jnrHeaderNav from "@/views/jnr/jnrHeaderNav.vue";
+import jnrAsideNav from "@/views/jnr/jnrAsideNav.vue";
+import jnrContainer from "@/components/jnr/jnrContainer.vue";
 export default {
+  name: "home",
+  components: { jnrTabs, jnrHeaderNav, jnrAsideNav, jnrContainer },
   data() {
     return {
       tabHeight: "400px", // tab面板高度
     };
   },
-  name:'home',
-  components:{ jnrContainer},
   computed: {
     menu: {
       get() {
@@ -53,7 +77,8 @@ export default {
         console.log("1 tabsCurrentId newVal", newVal);
       },
     },
-  }, methods: {
+  },
+  methods: {
     //点击了标签事件 可以让子组件执行该方法
     tabClick() {},
     //可以让子组件执行该方法
@@ -82,10 +107,19 @@ export default {
 
       if (!this.isOpen(item.id)) {
         this.$store.commit("addTabsDataArray", item);
+         //触发新增事件
+        this.$refs.tabs.modifyTab(item.id)
       }
       //设置当前选中的标签序号
       this.$store.commit("updateTabsCurrentId", item.id);
     },
   },
-}
+  mounted() {
+    window.addEventListener("beforeunload", function (e) {
+      console.log(e);
+      console.log("触发刷新事件");
+    });
+  },
+};
 </script>
+

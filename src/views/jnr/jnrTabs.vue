@@ -58,38 +58,32 @@
     <!-- 内容区域 -->
     <main class="jnr-tabs-content" :style="style">
       <slot name="content">
-        <router-view></router-view>
+        <!-- <router-view></router-view> -->
+        <!-- <component :is="currentRole" /> -->
+        <component :is="currentComponent" />
       </slot>
     </main>
   </div>
 </template>
 <script>
 import $ from "jquery";
+import panel0 from '@/layout/panel/panel0';
+import panel1 from '@/layout/panel/panel1';
+import panel2 from '@/layout/panel/panel2';
+import panel3 from '@/layout/panel/panel3';
+import panel4 from '@/layout/panel/panel4';
+import panel5 from '@/layout/panel/panel5';
+import panel6 from '@/layout/panel/panel6';
+import panel7 from '@/layout/panel/panel7';
+import panel8 from '@/layout/panel/panel8';
+import panel9 from '@/layout/panel/panel9';
+import panel10 from '@/layout/panel/panel10';
+import panel11 from '@/layout/panel/panel11';
+import panel12 from '@/layout/panel/panel12';
+import panel13 from '@/layout/panel/panel13';
 export default {
   name: "tabs",
-  components: {},
-
-  /* 
-     watch: {
-    $route(to, from) {
-      console.log("路由 to.path", to.path, "路由 from.path:", from.path);
-      $(`#jnr-tabs-title-item-label-${this.tabsCurrentId}`).click();
-      // this.modifyTab(parseInt(to.path.split("/")[1]));
-    },*/
-  //监听 用户 dataList 的变化，一有更新马上同步更新本组件 tabsDataArray
-  /*  tabsDataArray: {
-      handler(val) {
-        this.tabsDataArray = val;
-        //手动触发 currentId发生变化
-      },
-    },*/
-  //监听用户 序号的变化。马上更新本组件的
-  /*tabsCurrentId: {
-      handler(val) {
-        this.modifyTab(val);
-      },
-  },
-    },*/
+  components: {panel0,panel1,panel2,panel3,panel4,panel5,panel6,panel7,panel8,panel9,panel10,panel11,panel12,panel13},
   watch: {
     $route(to, from) {
       console.log("路由 to.path", to.path, "路由 from.path:", from.path);
@@ -112,6 +106,50 @@ export default {
       style: "height:100px;", //整个容器的默认高度样式
       selectId: 1, ///右键选中的值
       tabsMenuVisable: false, //右键菜单是否显示
+      currentComponent:"",//当前默认显示的组件
+      tabsContentArray:[
+        {
+          id:0,
+          component:panel0
+        },
+         {
+          id:1,
+          component:panel1
+        }, {
+          id:2,
+          component:panel2
+        }, {
+          id:3,
+          component:panel3
+        }, {
+          id:4,
+          component:panel4
+        }, {
+          id:5,
+          component:panel5
+        }, {
+          id:6,
+          component:panel6
+        }, {
+          id:7,
+          component:panel7
+        }, {
+          id:8,
+          component:panel8
+        }, {
+          id:9,
+          component:panel9
+        }, {
+          id:11,
+          component:panel11
+        }, {
+          id:12,
+          component:panel12
+        }, {
+          id:13,
+          component:panel13
+        },
+      ]
     };
   },
   computed: {
@@ -153,52 +191,26 @@ export default {
   methods: {
     //toLeft 左边缩
     toLeft() {
-      // $(".jnr-tabs-title-content>.jnr-tabs-title-item:eq(0)").css({
-      //   transform: "translate(-116rem)",
-      // });
-      // for (var i = 1; i < this.tabsDataArray.length; i++) {
-      //   $(`.jnr-tabs-title-content>.jnr-tabs-title-item:eq(${i})`).css({
-      //     transform: "translate(-6rem)",
-      //   });
-      // }
     },
     toRight() {
-      // $(".jnr-tabs-title-content>.jnr-tabs-title-item:eq(0)").css({
-      //   transform: "translate(116rem)",
-      // });
-      // for (var i = 1; i < this.tabsDataArray.length; i++) {
-      //   $(`.jnr-tabs-title-content>.jnr-tabs-title-item:eq(${i})`).css({
-      //     transform: "translate(6rem)",
-      //   });
-      // }
     },
     //修改当前选中的标签
     modifyTab(tabsCurrentId) {
-      console.log("我1111");
-
       //切换 索引
       this.$store.commit("updateTabsCurrentId", tabsCurrentId);
-      //代码的形式跳转路由
-      //切换内容
-      new Promise((resolve, reason) => {
-        resolve("resolve");
-        reason("reason");
-        this.$router
-          .push({
-            path: "./" + this.tabsCurrentId,
-          })
-          .then((data) => {
-            console.log("成功", data);
-          })
-          .catch((data) => {
-            console.log("失败", data);
-          });
-      });
-
+      //查看是第几个
+      for(var i = 0; i < this.tabsContentArray.length; i++){
+        if(this.tabsContentArray[i].id == tabsCurrentId){
+          this.currentComponent = this.tabsContentArray[i].component
+          break;
+        }
+      }     
       $(`#jnr-tabs-title-item-label-${this.tabsCurrentId}`).click();
     },
     // 提供鼠标点击标签事件/切换
     tabClick(target) {
+      console.log('我被点击了',target)
+      
       //显示关闭图标
       //再执行父组件的方法 方法没有参数时第二个参数用 null或者不写第二个参数也行，父组件没有此方法不会报错
       // 获取当前选中的标题
